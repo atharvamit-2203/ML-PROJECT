@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+pandas
+yfinance
+requests
+urllib3
+python-multipart
+jinja2
+python-dateutil

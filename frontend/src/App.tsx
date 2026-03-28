@@ -1,11 +1,14 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+
 import { onAuthStateChanged, User } from "firebase/auth";
 import { auth } from "./firebase";
 import Layout from "./components/Layout";
 import Dashboard from "./pages/Dashboard";
 import Predictor from "./pages/Predictor";
+import TradingSimulator from "./pages/TradingSimulator";
 import Login from "./pages/Login";
+
 
 // Protected Route Wrapper
 function ProtectedRoute({ children, user, loading }: { children: React.ReactNode, user: User | null, loading: boolean }) {
@@ -16,7 +19,7 @@ function ProtectedRoute({ children, user, loading }: { children: React.ReactNode
       </div>
     );
   }
-  
+
   if (!user) {
     return <Navigate to="/login" replace />;
   }
@@ -47,7 +50,9 @@ export default function App() {
         }>
           <Route index element={<Dashboard />} />
           <Route path="predictor" element={<Predictor />} />
+          <Route path="simulator" element={<TradingSimulator />} />
         </Route>
+
       </Routes>
     </BrowserRouter>
   );

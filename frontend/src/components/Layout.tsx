@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Outlet, Link, useLocation, useNavigate } from "react-router";
-import { LineChart, Calculator, TrendingUp, Menu, LogOut, User as UserIcon } from "lucide-react";
+import { LineChart, Calculator, TrendingUp, Menu, LogOut, User as UserIcon, Gamepad2 } from "lucide-react";
+
 import { auth } from "../firebase";
 import { signOut, User } from "firebase/auth";
 
@@ -30,31 +31,38 @@ export default function Layout({ user }: { user: User | null }) {
               </div>
               <span className="text-lg font-semibold tracking-tight">QuantTrade</span>
             </div>
-            
+
             <nav className="hidden md:flex items-center gap-6">
-              <Link 
-                to="/" 
-                className={`flex items-center gap-2 text-sm font-medium transition-colors ${
-                  location.pathname === "/" ? "text-white" : "text-zinc-400 hover:text-white"
-                }`}
+              <Link
+                to="/"
+                className={`flex items-center gap-2 text-sm font-medium transition-colors ${location.pathname === "/" ? "text-white" : "text-zinc-400 hover:text-white"
+                  }`}
               >
                 <LineChart className="h-4 w-4" />
                 Markets
               </Link>
-              <Link 
-                to="/predictor" 
-                className={`flex items-center gap-2 text-sm font-medium transition-colors ${
-                  location.pathname === "/predictor" ? "text-white" : "text-zinc-400 hover:text-white"
-                }`}
+              <Link
+                to="/predictor"
+                className={`flex items-center gap-2 text-sm font-medium transition-colors ${location.pathname === "/predictor" ? "text-white" : "text-zinc-400 hover:text-white"
+                  }`}
               >
                 <Calculator className="h-4 w-4" />
                 AI Predictor
               </Link>
+              <Link
+                to="/simulator"
+                className={`flex items-center gap-2 text-sm font-medium transition-colors ${location.pathname === "/simulator" ? "text-white" : "text-zinc-400 hover:text-white"
+                  }`}
+              >
+                <Gamepad2 className="h-4 w-4" />
+                Simulator
+              </Link>
+
             </nav>
 
             <div className="flex items-center gap-4">
               <div className="relative">
-                <button 
+                <button
                   onClick={() => setShowDropdown(!showDropdown)}
                   className="hidden md:flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-colors bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/30"
                 >
