@@ -7,3 +7,5 @@ urllib3
 python-multipart
 jinja2
 python-dateutil
+numpy
+scikit-learn

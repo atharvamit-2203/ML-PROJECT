@@ -244,13 +244,11 @@ export default function Predictor() {
                 </select>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-zinc-400 mb-1">ML Model</label>
-                <select className="block w-full px-3 py-2 border border-white/10 rounded-xl bg-black/50 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all appearance-none">
-                  <option value="lstm">LSTM Neural Network</option>
-                  <option value="transformer">Transformer-based</option>
-                  <option value="ensemble">Ensemble Model (Recommended)</option>
-                </select>
+              <div className="rounded-xl border border-white/10 bg-black/30 px-3 py-2">
+                <p className="text-[11px] uppercase tracking-wide text-zinc-500">Active Models</p>
+                <p className="text-xs text-zinc-300 mt-1">
+                  Linear/Gradient Boosting Regression + Random Forest/Logistic Classification
+                </p>
               </div>
 
               <button

@@ -1,9 +1,39 @@
-const OPENROUTER_API_KEY = "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";
+const OPENROUTER_API_KEY = (import.meta as any).env?.VITE_OPENROUTER_API_KEY || "";
 const SITE_URL = window.location.origin;
 const SITE_NAME = "QuantTrade AI";
 
+function buildLocalAnalysis(symbol: string, currentPrice: number, predictedPrice: number, change: number) {
+    const outlook = change > 1 ? "Bullish" : change < -1 ? "Bearish" : "Neutral";
+    const absMove = Math.abs(change).toFixed(2);
+    const momentum = change >= 0 ? "upside momentum" : "downside pressure";
+
+    return `### Technical Outlook: ${outlook}
+
+- **Current Price:** Rs ${currentPrice.toFixed(2)}
+- **Forecast Price:** Rs ${predictedPrice.toFixed(2)}
+- **Expected Move:** ${change.toFixed(2)}%
+
+**Risk Factors**
+- Elevated short-term volatility can invalidate directional signals.
+- Macro news/events may drive gaps beyond model assumptions.
+- Liquidity changes can amplify intraday swings.
+
+**Sentiment Summary**
+Model points to **${momentum}** with an estimated move of **${absMove}%** over the selected horizon. Treat this as decision support, not financial advice.
+
+### ML Concepts Used In This App
+- **Regression:** Linear Regression and Gradient Boosting Regressor for future price forecasting.
+- **Classification:** Random Forest (UP/DOWN direction) and Multinomial Logistic Regression (SELL/NEUTRAL/STRONG_BUY).
+- **Feature Engineering:** Lag-based features from recent prices/returns.
+- **Time-Series Framing:** Autoregressive next-step prediction using rolling historical windows.`;
+}
+
 export async function getStockAnalysis(symbol: string, currentPrice: number, predictedPrice: number, change: number) {
     try {
+        if (!OPENROUTER_API_KEY) {
+            return buildLocalAnalysis(symbol, currentPrice, predictedPrice, change);
+        }
+
         const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
             method: "POST",
             headers: {
@@ -26,16 +56,24 @@ export async function getStockAnalysis(symbol: string, currentPrice: number, pre
             1. Technical Outlook (Bullish/Bearish/Neutral)
             2. Key Risk Factors for this specific stock
             3. Sentiment Analysis summary
-            Keep it professional, data-driven, and under 200 words. Use markdown formatting.`
+            4. ML Concepts Used in this app, clearly mentioning:
+               - Regression (Linear Regression and Gradient Boosting Regressor)
+               - Classification (Random Forest and Multinomial Logistic Regression)
+               - Lag-based features and time-series forecasting setup
+            Keep it professional, data-driven, and under 220 words. Use markdown formatting with short bullet points.`
                     }
                 ]
             })
         });
 
+        if (!response.ok) {
+            return buildLocalAnalysis(symbol, currentPrice, predictedPrice, change);
+        }
+
         const data = await response.json();
-        return data.choices[0].message.content;
+        return data?.choices?.[0]?.message?.content || buildLocalAnalysis(symbol, currentPrice, predictedPrice, change);
     } catch (error) {
         console.error("OpenRouter Error:", error);
-        return "Error generating AI analysis. Please check your API configuration.";
+        return buildLocalAnalysis(symbol, currentPrice, predictedPrice, change);
     }
 }
